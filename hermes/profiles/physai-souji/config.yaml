@@ -1,48 +1,73 @@
-# Host-local blocks (command_allowlist, onboarding, secrets, skills, terminal) are kept on the host and omitted here.
+# Itonami-only definition: itonami.edn makes this profile an itonami agent
+# (ADR-2610222100). A Hermes profile must not use murakumo or mishima.
 model:
-  provider: awai-node
-  base_url: http://127.0.0.1:11434/v1
-  default: local
-  max_tokens: 8192
+  provider: murakumo
+  default: mishima
+  base_url: https://api.murakumo.cloud/v1
   context_length: 131072
+  max_tokens: 8192
 providers:
-  awai-node:
-    base_url: http://127.0.0.1:11434/v1
+  murakumo:
+    base_url: https://api.murakumo.cloud/v1
     api_mode: chat_completions
     stale_timeout_seconds: 600
     request_timeout_seconds: 900
-  kotoba:
-    base_url: https://api.kotoba.cloud/v1
-    api_mode: chat_completions
-    key_env: KOTOBA_API_TOKEN
-    stale_timeout_seconds: 600
-    request_timeout_seconds: 900
-    models:
-      qwen3.8-27b-whitehacker:
-        context_length: 262144
-      qwen3.8-flash-next-whitehacker:
-        context_length: 131072
-  custom:
-    models:
-      qwen3.8-27b-whitehacker:
-        stale_timeout_seconds: 600
-        timeout_seconds: 900
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+fallback_providers: []
 auxiliary:
   compression:
-    provider: kotoba
-    model: qwen3.8-flash-next-whitehacker
-    base_url: https://api.kotoba.cloud/v1
+    provider: murakumo
+    model: mishima
+    base_url: https://api.murakumo.cloud/v1
     reasoning_effort: none
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
   title_generation:
-    provider: kotoba
-    model: qwen3.8-flash-next-whitehacker
-    base_url: https://api.kotoba.cloud/v1
+    provider: murakumo
+    model: mishima
+    base_url: https://api.murakumo.cloud/v1
     reasoning_effort: none
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
   web_extract:
-    provider: kotoba
-    model: qwen3.8-flash-next-whitehacker
-    base_url: https://api.kotoba.cloud/v1
+    provider: murakumo
+    model: mishima
+    base_url: https://api.murakumo.cloud/v1
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
+  mcp:
+    provider: murakumo
+    model: mishima
+    base_url: https://api.murakumo.cloud/v1
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
+  skills_hub:
+    provider: murakumo
+    model: mishima
+    base_url: https://api.murakumo.cloud/v1
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
+  vision:
+    provider: murakumo
+    model: qwen3-vl-2b-instruct
+    base_url: https://api.murakumo.cloud/v1
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
+  approval:
+    provider: murakumo
+    model: mishima
+    base_url: https://api.murakumo.cloud/v1
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
+  triage_specifier:
+    provider: murakumo
+    model: mishima
+    base_url: https://api.murakumo.cloud/v1
+    key_env: CUSTOM_PROVIDER_MURAKUMO_KEY
+    fallback_chain: []
 agent:
   max_turns: 80
 approvals:
-  mode: "off"
+  mode: 'off'
+gateway:
+  cron_only: true
